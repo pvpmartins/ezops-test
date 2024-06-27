@@ -32,7 +32,7 @@ resource "aws_instance" "master" {
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.main.id
   security_groups = [aws_security_group.instance.name]
-  key_name      = var.key_name
+  key_name      = var.ec2_key_name
 
   user_data = file("${path.module}/kubernetes/setup.sh")
 
@@ -47,7 +47,7 @@ resource "aws_instance" "worker" {
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.main.id
   security_groups = [aws_security_group.instance.name]
-  key_name      = var.key_name
+  key_name      = var.ec2_key_name
 
   user_data = file("${path.module}/kubernetes/setup.sh")
 

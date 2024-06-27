@@ -1,9 +1,10 @@
 terraform {
-  required_version = ">= 0.12"
+  #required_version = ">= 0.12"
   backend "s3" {
     bucket         = "test-paulovitor-state"
-    key            = "./terraform.tfstate"
-    region         = "sa-east-1"
+    key            = "network/terraform.tfstate"
+    region         = var.aws_region
+    role_arn       = var.aws_arn_role
     dynamodb_table = null
     encrypt        = true
     versioning     = true
@@ -14,6 +15,9 @@ terraform {
 }
 
 provider "aws" {
+  assume_role {
+    role_arn = var.aws_arn_role
+  }
   region = var.aws_region
 }
 

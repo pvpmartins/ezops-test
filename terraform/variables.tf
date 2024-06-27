@@ -1,11 +1,15 @@
 variable "aws_region" {
-  description = "The AWS region to deploy to"
+  description = "AWS region for resources"
   type        = string
-  default     = "sa-east-1"
 }
 
-variable "key_name" {
-  description = "The name of the SSH key pair"
+variable "aws_arn_role" {
+  description = "ARN of the IAM role for AWS access"
+  type        = string
+}
+
+variable "ec2_key_name" {
+  description = "Name of the SSH key pair for EC2 instances"
   type        = string
 }
 
