@@ -1,0 +1,56 @@
+name: Backend Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials from IAM role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::654654369899:role/test-paulovitor-role
+          aws-region: us-west-2
+
+      - name: Download Terraform CLI
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
+      - name: Initialize Terraform
+        run: terraform init -backend-config="bucket=your-terraform-state-bucket" -backend-config="key=path/to/your/terraform.tfstate" -backend-config="region=us-west-2"
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: terraform-plan
+        run: terraform plan -out=tfplan
+
+      - name: Save Terraform Plan
+        uses: actions/upload-artifact@v2
+        with:
+          name: tfplan
+          path: tfplan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve tfplan
+
+      - name: Update Kubernetes Deployment
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            kubectl apply -f kubernetes/backend-deployment.yaml
+
