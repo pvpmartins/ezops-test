@@ -4,7 +4,7 @@ terraform {
     bucket         = "test-paulovitor-state"
     key            = "network/terraform.tfstate"
     region         = var.aws_region
-    role_arn       = var.aws_arn_role
+    #    role_arn       = var.aws_arn_role
     dynamodb_table = null
     encrypt        = true
     versioning     = true
@@ -15,9 +15,9 @@ terraform {
 }
 
 provider "aws" {
-  assume_role {
-    role_arn = var.aws_arn_role
-  }
+  #assume_role {
+    #  role_arn = var.aws_arn_role
+  #}
   region = var.aws_region
 }
 
