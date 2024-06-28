@@ -59,8 +59,8 @@ jobs:
           path: tfplan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve tfplan
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
 
       - name: Update Kubernetes Deployment
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
