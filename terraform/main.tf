@@ -1,23 +1,34 @@
-terraform {
-  #required_version = ">= 0.12"
-  backend "s3" {
-    bucket         = "test-paulovitor-state"
-    key            = "network/terraform.tfstate"
-    region         = var.aws_region
-    #    role_arn       = var.aws_arn_role
-    dynamodb_table = null
-    encrypt        = true
-    versioning     = true
-    lock {
-      enabled = true
-    }
+provider "aws" {
+  region = "sa-east-1"
+}
+
+resource "aws_s3_bucket" "terraform_state" {
+  bucket = "test-paulovitor-state"
+  acl    = "private"
+
+  versioning {
+    enabled = true
   }
 }
 
-provider "aws" {
-  #assume_role {
-    #  role_arn = var.aws_arn_role
-  #}
-  region = var.aws_region
+resource "aws_dynamodb_table" "terraform_locks" {
+  name         = "terraform-locks"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+
+terraform {
+  backend "s3" {
+    bucket         = "test-paulovitor-state"
+    key            = "network/terraform.tfstate"
+    region         = "sa-east-1"
+    dynamodb_table = "teste-paulo-vitor-lock-state-table"
+    encrypt        = true
+  }
 }
 
