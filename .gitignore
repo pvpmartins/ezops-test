@@ -1,4 +1,4 @@
 ./apps/backend/node_modules
 ./apps/frontend/node_modules
 ./terraform/tfplan
-./terraform/.terraform
+./terraform/.terraform/
