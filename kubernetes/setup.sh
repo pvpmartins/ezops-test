@@ -38,6 +38,6 @@ if hostname | grep -q "master"; then
   kubeadm token create --print-join-command > /joincluster.sh
 else
   # On worker nodes, join the cluster using the token generated on the master
-  sudo $(curl -fsSL http://master-node-ip/joincluster.sh)
+  sudo $(curl -fsSL http://<master_node_ip>/joincluster.sh)
 fi
 
