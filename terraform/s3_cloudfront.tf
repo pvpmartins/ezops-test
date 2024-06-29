@@ -1,32 +1,44 @@
+# Define the S3 bucket for the frontend application
 resource "aws_s3_bucket" "frontend_bucket" {
   bucket = "test-paulovitor-frontend"
-  acl    = "public-read"
+  #acl    = "private"  # Ensure ACLs are set to private
 
   website {
     index_document = "index.html"
     error_document = "index.html"
   }
+
+  # Optional: Enable versioning for the bucket if needed
+  versioning {
+    enabled = true
+  }
+
+  tags = {
+    Name = "Frontend Bucket"
+  }
 }
 
+# Bucket policy to allow public read access to objects
 resource "aws_s3_bucket_policy" "frontend_bucket_policy" {
   bucket = aws_s3_bucket.frontend_bucket.id
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
-        Effect = "Allow"
-        Principal = "*"
-        Action = "s3:GetObject"
-        Resource = "${aws_s3_bucket.frontend_bucket.arn}/*"
+        Effect    = "Allow",
+        Principal = "*",
+        Action    = "s3:GetObject",
+        Resource  = "${aws_s3_bucket.frontend_bucket.arn}/*"
       }
     ]
   })
 }
 
+# CloudFront distribution serving content from the S3 bucket
 resource "aws_cloudfront_distribution" "frontend_distribution" {
   origin {
-    domain_name = "${aws_s3_bucket.frontend_bucket.bucket_regional_domain_name}"
+    domain_name = aws_s3_bucket.frontend_bucket.bucket_regional_domain_name
     origin_id   = "S3-${aws_s3_bucket.frontend_bucket.id}"
 
     s3_origin_config {
@@ -72,6 +84,7 @@ resource "aws_cloudfront_distribution" "frontend_distribution" {
   }
 }
 
+# Origin access identity for the S3 bucket
 resource "aws_cloudfront_origin_access_identity" "frontend_origin_access_identity" {
   comment = "Access identity for S3 bucket"
 }
