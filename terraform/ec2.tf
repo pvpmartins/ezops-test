@@ -81,7 +81,7 @@ resource "aws_instance" "master" {
   ami                    = "ami-04716897be83e3f04"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.allow_all.id]
+  vpc_security_group_ids = [aws_security_group.allow_limited.id]
   key_name               = var.ec2_key_name
 
   user_data = file("../${path.root}/kubernetes/setup.sh")
@@ -96,7 +96,7 @@ resource "aws_instance" "worker" {
   ami                    = "ami-04716897be83e3f04"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.allow_all.id]
+  vpc_security_group_ids = [aws_security_group.allow_limited.id]
   key_name               = var.ec2_key_name
 
   user_data = file("../${path.root}/kubernetes/setup.sh")
