@@ -1,7 +1,10 @@
+provider "aws" {
+  region = "sa-east-1"
+}
+
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 }
-
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
@@ -17,9 +20,9 @@ resource "aws_route_table" "main" {
 }
 
 resource "aws_subnet" "public" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.1.0/24"
-  availability_zone = "sa-east-1a"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = "sa-east-1a"
   map_public_ip_on_launch = true
   tags = {
     Name = "PublicSubnet"
@@ -29,9 +32,10 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "main" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.2.0/24"
-  #  availability_zone       = "sa-east-1a" 
+  availability_zone       = "sa-east-1a"
   map_public_ip_on_launch = true
 }
+
 resource "aws_security_group" "allow_all" {
   vpc_id = aws_vpc.main.id
 
@@ -71,6 +75,43 @@ resource "aws_security_group" "allow_all" {
     Name = "AllowAllSG"
   }
 }
+
+resource "aws_network_acl" "main" {
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    rule_number = 100
+    protocol    = "tcp"
+    rule_action = "allow"
+    cidr_block  = "0.0.0.0/0"
+    from_port   = 22
+    to_port     = 22
+  }
+
+  egress {
+    rule_number = 100
+    protocol    = "-1"
+    rule_action = "allow"
+    cidr_block  = "0.0.0.0/0"
+    from_port   = 0
+    to_port     = 0
+  }
+
+  tags = {
+    Name = "AllowAllACL"
+  }
+}
+
+resource "aws_network_acl_association" "public" {
+  subnet_id     = aws_subnet.public.id
+  network_acl_id = aws_network_acl.main.id
+}
+
+resource "aws_network_acl_association" "main" {
+  subnet_id     = aws_subnet.main.id
+  network_acl_id = aws_network_acl.main.id
+}
+
 resource "aws_route_table_association" "main" {
   subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.main.id
