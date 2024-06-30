@@ -1,7 +1,8 @@
-resource "aws_security_group" "instance" {
+resource "aws_security_group" "allow_all" {
   vpc_id = aws_vpc.main.id
 
   ingress {
+    description = "Allow SSH from anywhere"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
@@ -9,6 +10,7 @@ resource "aws_security_group" "instance" {
   }
 
   ingress {
+    description = "Allow HTTP traffic"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -16,6 +18,7 @@ resource "aws_security_group" "instance" {
   }
 
   ingress {
+    description = "Allow HTTPS traffic"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -23,10 +26,15 @@ resource "aws_security_group" "instance" {
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "AllowAllSG"
   }
 }
 
