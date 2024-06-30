@@ -32,25 +32,43 @@ resource "aws_subnet" "main" {
   #  availability_zone       = "sa-east-1a" 
   map_public_ip_on_launch = true
 }
-resource "aws_security_group" "allow_all" {
+resource "aws_security_group" "allow_limited" {
   vpc_id = aws_vpc.main.id
 
   ingress {
-    from_port   = 0
-    to_port     = 65535
+    description = "Allow SSH from specific IP"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["your_public_ip/32"]  # Replace with your IP
+  }
+
+  ingress {
+    description = "Allow HTTP traffic"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow HTTPS traffic"
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
+    description = "Allow all outbound traffic"
     from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
-    Name = "AllowAllSG"
+    Name = "AllowLimitedSG"
   }
 }
 
