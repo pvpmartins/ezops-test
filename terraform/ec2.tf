@@ -32,15 +32,15 @@ resource "aws_subnet" "main" {
   #  availability_zone       = "sa-east-1a" 
   map_public_ip_on_launch = true
 }
-resource "aws_security_group" "allow_limited" {
+resource "aws_security_group" "allow_all" {
   vpc_id = aws_vpc.main.id
 
   ingress {
-    description = "Allow SSH from specific IP"
+    description = "Allow SSH from anywhere"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["your_public_ip/32"]  # Replace with your IP
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -68,10 +68,9 @@ resource "aws_security_group" "allow_limited" {
   }
 
   tags = {
-    Name = "AllowLimitedSG"
+    Name = "AllowAllSG"
   }
 }
-
 resource "aws_route_table_association" "main" {
   subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.main.id
@@ -81,7 +80,7 @@ resource "aws_instance" "master" {
   ami                    = "ami-04716897be83e3f04"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.allow_limited.id]
+  vpc_security_group_ids = [aws_security_group.allow_all.id]
   key_name               = var.ec2_key_name
 
   user_data = file("../${path.root}/kubernetes/setup.sh")
@@ -96,7 +95,7 @@ resource "aws_instance" "worker" {
   ami                    = "ami-04716897be83e3f04"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public.id
-  vpc_security_group_ids = [aws_security_group.allow_limited.id]
+  vpc_security_group_ids = [aws_security_group.allow_all.id]
   key_name               = var.ec2_key_name
 
   user_data = file("../${path.root}/kubernetes/setup.sh")
