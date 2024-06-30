@@ -13,6 +13,10 @@ resource "aws_route_table" "main" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.main.id
   }
+
+  tags = {
+    Name = "MainRouteTable"
+  }
 }
 
 resource "aws_subnet" "public" {
@@ -66,6 +70,11 @@ resource "aws_network_acl_association" "public" {
 resource "aws_network_acl_association" "main" {
   subnet_id     = aws_subnet.main.id
   network_acl_id = aws_network_acl.main.id
+}
+
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.main.id
 }
 
 resource "aws_route_table_association" "main" {
