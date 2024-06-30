@@ -36,18 +36,18 @@ resource "aws_network_acl" "main" {
   vpc_id = aws_vpc.main.id
 
   ingress {
-    rule_number = 100
+    rule_no = 100
     protocol    = "tcp"
-    rule_action = "allow"
+    action = "allow"
     cidr_block  = "0.0.0.0/0"
     from_port   = 22
     to_port     = 22
   }
 
   egress {
-    rule_number = 100
+    rule_no = 100
     protocol    = "-1"
-    rule_action = "allow"
+    action = "allow"
     cidr_block  = "0.0.0.0/0"
     from_port   = 0
     to_port     = 0
