@@ -57,15 +57,14 @@ ingress {
     to_port     = 65535
   }
 
-  ingress {
+ ingress {
     rule_no = 102
     protocol    = "icmp"
     action = "allow"
     cidr_block  = "0.0.0.0/0"
-    from_port   = -1
-    to_port     = -1
+    from_port   = 0
+    to_port     = 255
   }
-
   egress {
     rule_no = 100
     protocol    = "-1"
