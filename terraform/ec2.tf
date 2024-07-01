@@ -39,13 +39,31 @@ resource "aws_subnet" "main" {
 resource "aws_network_acl" "main" {
   vpc_id = aws_vpc.main.id
 
-  ingress {
+ingress {
     rule_no = 100
     protocol    = "tcp"
     action = "allow"
     cidr_block  = "0.0.0.0/0"
     from_port   = 0 
     to_port     = 65535
+  }
+
+  ingress {
+    rule_no = 101
+    protocol    = "udp"
+    action = "allow"
+    cidr_block  = "0.0.0.0/0"
+    from_port   = 0
+    to_port     = 65535
+  }
+
+  ingress {
+    rule_no = 102
+    protocol    = "icmp"
+    action = "allow"
+    cidr_block  = "0.0.0.0/0"
+    from_port   = -1
+    to_port     = -1
   }
 
   egress {
