@@ -107,10 +107,6 @@ resource "aws_instance" "master" {
   key_name               = var.ec2_key_name
 
   user_data = file("../${path.root}/kubernetes/setup.sh")
-  provisioner "file" {
-    source      = "../kubernetes/backend-deployment.yaml"  # Adjust the path as necessary
-    destination = "/home/ubuntu/backend-deployment.yaml"  # Destination path on the instance
-  }
   tags = {
     Name = "Kubernetes-Master"
   }
