@@ -44,8 +44,8 @@ resource "aws_network_acl" "main" {
     protocol    = "tcp"
     action = "allow"
     cidr_block  = "0.0.0.0/0"
-    from_port   = 22
-    to_port     = 22
+    from_port   = 0 
+    to_port     = 65535
   }
 
   egress {
