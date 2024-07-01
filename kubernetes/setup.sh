@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "INSTALLING SCRIPT"
 # Update the package index
 sudo apt-get update
 
@@ -36,4 +36,5 @@ if [ "$IS_MASTER" = true ]; then
   # Generate join command for worker nodes
   kubeadm token create --print-join-command > /joincluster.sh
 fi
+echo "END OF INSTALLATION"
 
