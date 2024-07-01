@@ -101,7 +101,7 @@ resource "aws_route_table_association" "main" {
 
 resource "aws_instance" "master" {
   ami                    = "ami-04716897be83e3f04"
-  instance_type          = "t2.micro"
+  instance_type          = "t3.small"
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.allow_all.id]
   key_name               = var.ec2_key_name
