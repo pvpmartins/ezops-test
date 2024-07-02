@@ -80,3 +80,5 @@ jobs:
             sudo mv ./kubectl /usr/local/bin/kubectl
             kubectl apply -f kubernetes/backend-deployment.yaml
             kubectl apply -f kubernetes/postgres-deployment.yaml
+            kubectl apply -f kubernetes/backend-service.yaml
+            kubectl apply -f kubernetes/postgres-service.yaml
