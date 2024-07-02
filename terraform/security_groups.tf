@@ -30,7 +30,8 @@ resource "aws_security_group" "allow_all" {
     from_port   = -1
     to_port     = -1
     protocol    = "icmp"
-    security_groups = [aws_security_group.allow_all.id]  }
+    security_groups = [aws_security_group.allow_all.id]  
+  }
 
   egress {
     description = "Allow all outbound traffic"
