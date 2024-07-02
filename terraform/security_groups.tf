@@ -25,6 +25,13 @@ resource "aws_security_group" "allow_all" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "Allow ICMP Echo Request"
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    security_groups = [aws_security_group.allow_all.id]  }
+
   egress {
     description = "Allow all outbound traffic"
     from_port   = 0

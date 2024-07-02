@@ -106,7 +106,7 @@ resource "aws_instance" "master" {
   vpc_security_group_ids = [aws_security_group.allow_all.id]
   key_name               = var.ec2_key_name
 
-  user_data = file("../${path.root}/kubernetes/setup.sh")
+  user_data = "${file("../${path.root}/kubernetes/master-setup.sh")}"
   tags = {
     Name = "Kubernetes-Master"
   }
@@ -120,7 +120,7 @@ resource "aws_instance" "worker" {
   vpc_security_group_ids = [aws_security_group.allow_all.id]
   key_name               = var.ec2_key_name
 
-  user_data = file("../${path.root}/kubernetes/setup.sh")
+  user_data = "${file("../${path.root}/kubernetes/worker-setup.sh")}"
 
   tags = {
     Name = "Kubernetes-Worker-${count.index + 1}"
