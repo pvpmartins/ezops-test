@@ -137,51 +137,6 @@ resource "aws_instance" "worker" {
   }
 }
 
-resource "aws_lb" "my_load_balancer" {
-  name               = "my-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.allow_all.id]  # Assuming you have a security group defined
-  subnet_mapping {
-    subnet_id         = aws_subnet.public.id
-  }
-
-  subnet_mapping {
-    subnet_id         = aws_subnet.public_b.id
-  }
-  tags = {
-    Name = "My ALB"
-  }
-}
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.my_load_balancer.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.my_target_group.arn
-  }
-}
-
-resource "aws_lb_target_group" "my_target_group" {
-  name     = "my-target-group"
-  port     = 3000
-  protocol = "HTTP"
-  vpc_id   = "vpc-028d0eff2b67695d1"
-
-  health_check {
-    path                = "/"
-    port                = 3000
-    protocol            = "HTTP"
-    interval            = 30
-    timeout             = 10
-    healthy_threshold   = 3
-    unhealthy_threshold = 3
-  }
-}
-
 resource "aws_key_pair" "deployer" {
   key_name   = "teste-paulo-key-2"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQClvi5JataXIAp9DeDoM67lykgnKU8Kkf2lvGLCc76K3K1li6GPAGnoiC8P6FxZoSoo3F1xnMBcL9mDrjZ0skuZGwvq5kTYt/qiZQJDLt5C+nZt+bGBkHoqsKCcbXDOrtpUnH5lA7u/p1VucPvOBMytIUr2nfx5sDK/sTEBHLgRUGyscnVtWSNRGDDMKYsSlCJ7thzeUqxheHFiOBU4Mx5OzHXVmq/93nMkALXEIpvMdF6bliskHNN2y3CN/3WvFUnFz1UPu6Hk9YDPXZHgX/osngzM3ua99lMjP3Wc1XL9Br680ATx54wuqmgQPZsBlCHlTg/mglXLBdFfW5UjZ3IZs9coBb58xQicovYbN9TUdiPqk8CbNFWXqkAD8D7cDQ/tFSzqfQ+8rlE4swLIWClvBiShlm+9CfKxEPL8KEB1/Jvk03y+LKaLmCJW0RZE8FJIDzEY1spHGhBpi+X6Uiwu6Np+qhH25O5Kp+wqrqjE0Gvmrf0TXX0hMseYMTqWw74DaAJu8pXWQfCBJVxUpvp7n1Rzn5DkMzMx/WQqGkLqLP3AtXj4cvEHgv6LNk/h+JlmPbS//D76F1/HtgN8lVBFlF3qAVFyowtRx77uMu/2hKinbT62AfBJTIuxaxEU6IrAwWfJXHQaglMxYOM6+1kyTTod/H+eafCMTBTY4fod9w== pvpmartins@hotmail.com"
