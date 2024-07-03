@@ -35,6 +35,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
+          cd /apps/backend/
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/backend-image:latest .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/backend-image:latest
   terraform:
