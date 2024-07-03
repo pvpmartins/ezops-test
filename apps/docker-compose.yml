@@ -6,7 +6,7 @@ services:
       - "8080:8080"
   
   backend:
-    build: ./backend
+    image: pvpmartins/ezops:latest
     environment:
       - DB_HOST=postgres
       - DB_NAME=mydatabase

@@ -29,6 +29,16 @@ resource "aws_subnet" "public" {
   }
 }
 
+resource "aws_subnet" "public_b" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.3.0/24"
+  availability_zone       = "sa-east-1b"
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "PublicSubnetB"
+  }
+}
+
 resource "aws_subnet" "main" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.2.0/24"
@@ -124,6 +134,51 @@ resource "aws_instance" "worker" {
 
   tags = {
     Name = "Kubernetes-Worker-${count.index + 1}"
+  }
+}
+
+resource "aws_lb" "my_load_balancer" {
+  name               = "my-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.allow_all.id]  # Assuming you have a security group defined
+  subnet_mapping {
+    subnet_id         = aws_subnet.public.id
+  }
+
+  subnet_mapping {
+    subnet_id         = aws_subnet.public_b.id
+  }
+  tags = {
+    Name = "My ALB"
+  }
+}
+
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.my_load_balancer.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.my_target_group.arn
+  }
+}
+
+resource "aws_lb_target_group" "my_target_group" {
+  name     = "my-target-group"
+  port     = 3000
+  protocol = "HTTP"
+  vpc_id   = "vpc-028d0eff2b67695d1"
+
+  health_check {
+    path                = "/"
+    port                = 3000
+    protocol            = "HTTP"
+    interval            = 30
+    timeout             = 10
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
   }
 }
 

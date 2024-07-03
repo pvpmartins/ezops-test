@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors')
 
 const corsOptions = {
-  origin: 'http://localhost:8080', // Allow requests from your frontend
+  origin: '*', // Allow requests from your frontend
   credentials: true, // Allow cookies to be sent
   optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
 };
