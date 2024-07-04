@@ -13,6 +13,8 @@ spec:
       labels:
         app: backend
     spec:
+      nodeSelector:
+        node-role.kubernetes.io/worker: worker1
       containers:
       - name: backend
         image: pvpmartins/ezops:latest
@@ -28,3 +30,5 @@ spec:
         - name: DB_PASSWORD
           value: "mypassword"
 
+        - name: DB_PORT
+          value: "5432"  
