@@ -25,6 +25,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y awscli
 
+      - name: Check current directory
+        run: pwd
       - name: Deploy to S3 and Invalidate CloudFront
         run: |
           aws s3 sync ./dist s3://test-paulovitor-frontend --delete
