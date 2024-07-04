@@ -27,7 +27,7 @@ jobs:
 
       - name: Deploy to S3 and Invalidate CloudFront
         run: |
-          aws s3 sync ./dist s3://your-s3-bucket-name --delete
+          aws s3 sync ./dist s3://test-paulovitor-frontend --delete
           aws cloudfront create-invalidation --distribution-id your-cloudfront-distribution-id --paths "/*"
 
       # Additional steps as needed for your frontend build and deployment process
