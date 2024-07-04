@@ -35,8 +35,8 @@ resource "aws_security_group" "allow_all" {
 
   ingress {
     description = "Expose port to external access"
-    from_port   = 31177
-    to_port     = 31177
+    from_port   = var.backend_port 
+    to_port     = var.backend_port
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }

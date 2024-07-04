@@ -13,3 +13,8 @@ variable "ec2_key_name" {
   type        = string
 }
 
+
+variable "backend_port" {
+  description = "external port to backend"
+  type        = number
+}
